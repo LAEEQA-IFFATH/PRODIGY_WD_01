@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hogwarts Magical Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/harry-potter" rel="stylesheet">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Playfair Display', serif;
+      background: #121212; color: #f5f5dc; overflow-x: hidden;
+    }
+    nav {
+      position: fixed; top: 0; width: 100%;
+      background: rgba(64,0,0,0.85); padding: 20px 50px;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+      z-index: 1000;
+    }
+    nav.scrolled {
+      background: rgba(20,20,20,0.95);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    nav .logo {
+      font-family: 'Harry Potter', 'Cinzel', serif;
+      font-size: 2rem; color: #f5f5dc; letter-spacing: 2px;
+      text-shadow: 0 0 8px gold;
+    }
+    nav ul {
+      list-style: none; display: flex; gap: 30px;
+    }
+    nav ul li a {
+      text-decoration: none; color: #f5f5dc; font-weight: 600;
+      position: relative; transition: color 0.3s ease;
+    }
+    nav ul li a:hover {
+      color: gold; text-shadow: 0 0 8px gold;
+    }
+
+    header {
+      position: relative; height: 100vh;
+      background: url('https://images.unsplash.com/photo-1615032566788-3870505234d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
+      display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden;
+    }
+    header::before, header::after {
+      content: ''; position: absolute; width: 2px; height: 2px;
+      background: white; border-radius: 50%; animation: twinkle 2s infinite alternate;
+    }
+    header::before { top: 20%; left: 40%; }
+    header::after { top: 60%; left: 70%; animation-delay: 1s; }
+    @keyframes twinkle {
+      from { opacity: 0.2; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.8); }
+    }
+    .candle {
+      position: absolute; width: 4px; height: 20px; background: #fff8dc;
+      top: 80%; left: 50%; animation: float 4s infinite alternate ease-in-out;
+    }
+    .candle::before {
+      content: ''; position: absolute; top: -10px; left: 50%;
+      transform: translateX(-50%); width: 6px; height: 6px;
+      background: gold; border-radius: 50%;
+      box-shadow: 0 0 8px gold; animation: flicker 0.3s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+      100% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50px); }
+    }
+    header h1 {
+      position: relative; font-family: 'Harry Potter', 'Cinzel', serif;
+      font-size: 4rem; background: rgba(0,0,0,0.5); padding: 20px 40px;
+      border: 2px solid gold; border-radius: 8px; z-index: 1;
+      text-shadow: 0 0 8px gold;
+    }
+
+    section { padding: 100px 50px; transition: background 0.6s ease, color 0.6s ease; }
+    h2 {
+      font-family: 'Cinzel', serif; font-size: 2.5rem;
+      margin-bottom: 30px; color: gold; text-shadow: 0 0 5px gold;
+    }
+
+    p { max-width: 800px; line-height: 1.8; }
+
+    .houses {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;
+    }
+    .house-card {
+      background: rgba(255,255,255,0.05); border: 2px solid gold;
+      border-radius: 10px; padding: 30px; text-align: center; cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-shadow: 0 0 5px gold;
+    }
+    .house-card:hover {
+      transform: translateY(-10px); box-shadow: 0 0 20px gold;
+    }
+    .house-info {
+      margin-top: 30px; font-size: 1.1rem; line-height: 1.6; display: none;
+      animation: fade 0.5s ease; text-shadow: 0 0 5px gold;
+    }
+    .house-info.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    form {
+      display: flex; flex-direction: column; max-width: 400px; gap: 20px;
+    }
+    form input, form textarea {
+      padding: 10px; border: 2px solid gold; border-radius: 5px; background: transparent; color: #f5f5dc;
+    }
+    form button {
+      padding: 10px 20px; background: gold; border: none; cursor: pointer; font-weight: bold;
+      border-radius: 5px; box-shadow: 0 0 5px gold; transition: background 0.3s ease;
+    }
+    form button:hover { background: #ffd700; }
+
+    footer {
+      text-align: center; padding: 40px 20px; background: #111; color: #aaa;
+    }
+
+    #backToTop, #musicToggle {
+      position: fixed; bottom: 30px; border: none; padding: 12px 18px; border-radius: 50%;
+      font-size: 18px; cursor: pointer; box-shadow: 0 0 10px gold; transition: background 0.3s ease;
+    }
+    #backToTop { right: 30px; background: gold; color: #111; display: none; }
+    #backToTop:hover { background: #ffd700; }
+    #musicToggle { left: 30px; background: gold; color: #111; }
+    #musicToggle:hover { background: #ffd700; }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">Hogwarts</div>
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#houses">Houses</a></li>
+      <li><a href="#admissions">Admissions</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header id="hero">
+    <h1>Welcome to Hogwarts</h1>
+    <div class="candle"></div>
+  </header>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>
+      Hogwarts School of Witchcraft and Wizardry is the finest wizarding school in the world.
+      For centuries, it has been the home of young witches and wizards discovering magic,
+      forging friendships, and defending against the Dark Arts.
+    </p>
+  </section>
+
+  <section id="houses">
+    <h2>Hogwarts Houses</h2>
+    <div class="houses">
+      <div class="house-card" data-house="gryffindor">Gryffindor</div>
+      <div class="house-card" data-house="hufflepuff">Hufflepuff</div>
+      <div class="house-card" data-house="ravenclaw">Ravenclaw</div>
+      <div class="house-card" data-house="slytherin">Slytherin</div>
+    </div>
+    <div id="houseInfo" class="house-info"></div>
+  </section>
+
+  <section id="admissions">
+    <h2>Admissions</h2>
+    <form id="admissionForm">
+      <input type="text" placeholder="Full Name" required>
+      <input type="number" placeholder="Age" required>
+      <input type="text" placeholder="Preferred House">
+      <textarea placeholder="Message"></textarea>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formMessage" style="margin-top:20px; display:none;">Thank you! Please await an owl for further instructions.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Questions? Owl Professor McGonagall at mcgonagall@hogwarts.edu</p>
+  </section>
+
+  <footer>&copy; 2025 Hogwarts School of Witchcraft and Wizardry</footer>
+
+  <button id="backToTop">↑</button>
+  <button id="musicToggle">♫</button>
+  <audio id="hogwartsMusic" loop>
+    <source src="YOUR_HOGWARTS_MUSIC_URL.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const nav = document.querySelector('nav');
+    const houseCards = document.querySelectorAll('.house-card');
+    const houseInfo = document.getElementById('houseInfo');
+    const housesSection = document.getElementById('houses');
+    const backToTop = document.getElementById('backToTop');
+    const musicToggle = document.getElementById('musicToggle');
+    const music = document.getElementById('hogwartsMusic');
+    const form = document.getElementById('admissionForm');
+    const formMsg = document.getElementById('formMessage');
+
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+      backToTop.style.display = window.scrollY > 200 ? 'block' : 'none';
+    });
+
+    const houses = {
+      gryffindor: {
+        bg: '#7f0909', text: '#ffd700',
+        text: 'Bravery, courage, and chivalry. Lion, scarlet & gold.'
+      },
+      hufflepuff: {
+        bg: '#ecb939', text: '#ff0000',
+        text: 'Loyalty, patience, fair play. Badger, yellow & black.'
+      },
+      ravenclaw: {
+        bg: '#000a90', text: '#c0c0c0',
+        text: 'Wit, wisdom, learning. Eagle, blue & bronze.'
+      },
+      slytherin: {
+        bg: '#1a472a', text: '#c0c0c0',
+        text: 'Ambition, cunning, resourcefulness. Serpent, green & silver.'
+      }
+    };
+
+    houseCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const house = card.getAttribute('data-house');
+        housesSection.style.background = houses[house].bg;
+        housesSection.style.color = houses[house].text;
+        houseInfo.textContent = houses[house].text;
+        houseInfo.classList.add('active');
+      });
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    musicToggle.addEventListener('click', () => {
+      if (music.paused) { music.play(); } else { music.pause(); }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); form.style.display = 'none'; formMsg.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
